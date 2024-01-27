@@ -39,7 +39,26 @@ $(document).ready(function () {
                 today.append(placeName, temp, wind, humidity);
                 console.log(queryURL);
             });
+
+        var forecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${currentCity}&appid=${apiKey}`;
+        fetch(forecastURL)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (forecast) {
+                // get list of forecasts
+                var forecasts = forecast.list;
+
+                for (let i = 7; i < forecasts.length; i + 8) {
+                    console.log("loop");
+
+                }
+                var day = new Date(forecast.list[15].dt * 1000)
+                var formattedDay = dayjs(day).format("DD/MM/YYYY");
+                console.log(formattedDay);
+            });
     };
+
     //event listener for search button
     $(".search-button").on("click", displayWeather);
 
@@ -76,9 +95,6 @@ $(document).ready(function () {
 
         renderButtons()
     });
-
-
-
 
 
     // call function to display initial history buttons
