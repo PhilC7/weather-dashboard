@@ -1,15 +1,36 @@
-/* Styling to show placement - TO BE REVISED */
 #today {
   height: 250px;
-  /* background-color: rgb(119, 176, 199); */
+  color: white;
 }
 .card.forecast {
-  background-color: rgb(43, 114, 149);
   border: none;
-  border-radius: 0;
 }
 
 .icon {
   height: 4rem;
   margin-left: 1rem;
+}
+
+#history.history-btn {
+  background-color: rgb(196, 152, 106) 0%;
+}
+
+.weather-header {
+  background-color: rgba(196, 152, 106, 1);
+}
+
+#search-button {
+  background-color: rgba(102, 156, 236, 1);
+  color: white;
+}
+#search-button:hover {
+  background-color: rgb(67, 135, 235);
+}
+
+#delete {
+  background-color: rgba(236, 102, 201, 1);
+  color: white;
+}
+#delete:hover {
+  background-color: rgb(204, 59, 165);
 }

@@ -16,7 +16,8 @@ $(document).ready(function () {
     deleteHistory.addClass("deleteHistory mt-3");
 
     var deleteBtn = $("<button>");
-    deleteBtn.addClass("btn btn-danger w-100 mb-3 delete");
+    deleteBtn.addClass("btn w-100 mb-3 delete");
+    deleteBtn.attr("id", "delete")
     deleteBtn.text("Delete History");
     deleteHistory.append(deleteBtn);
     deleteHistory.insertBefore(".hr");
@@ -36,7 +37,7 @@ $(document).ready(function () {
                 return response.json();
             })
             .then(function (data) {
-                $("#today").css("background-color", "rgb(119, 176, 199)") //set css styling for today section
+                $("#today").css("background", "linear-gradient(180deg, rgba(196, 152, 106,1) 0%, rgba(102,156,236,1) 100%)") //set css styling for today section
 
                 var placeName = $("<h2>").text(`${currentCity} (${date})`);
                 var weatherCode = data.weather[0].icon;
@@ -73,9 +74,8 @@ $(document).ready(function () {
                     var weatherCode = forecasts[i].weather[0].icon;
                     var weatherURL = `https://openweathermap.org/img/wn/${weatherCode}@2x.png`;
 
-
                     $("#forecast").append(`
-                    <div class="card col mx-2 forecast" >
+                    <div class="card col mx-3 rounded forecast" >
                     <div class="card-body">
                       <h5 class="card-title">${formattedDay}</h5>
                       <img src="${weatherURL}" alt="${forecasts[i].weather[0].description}" />
@@ -84,6 +84,9 @@ $(document).ready(function () {
                       <p class="card-text humidity">Humidity: ${forecasts[i].main.humidity}%</p>
                     </div>
                   </div>`)
+                    $(".card").css("color", "white");
+                    $(".card").css("background", "linear-gradient(0deg, rgba(236,102,201,1) 0%, rgba(102,156,236,1) 100%)");
+
                 }
             });
     };
