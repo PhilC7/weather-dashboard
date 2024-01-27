@@ -8,23 +8,30 @@ $(document).ready(function () {
     var today = $("#today");
     var forecast = $("#forecast");
     var locations = [];
+    var currentCity = "London"; //current city variable to access data.
 
 
     // function to display weather
+    function displayWeather(e) {
+        console.log(currentCity);
+        var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${currentCity}&appid=${apiKey}`;
+        fetch(queryURL)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                var placeName = $("<h2>").text(currentCity);
+                var temp = $("<p>").text(`Temp: ${Math.floor(data.main.temp - 273.15)} ˚C`);
+                var wind = $("<p>").text(`Wind: ${data.wind.speed} KPH`);
+                var humidity = $("<p>").text(`Humidity: ${data.main.humidity}%`);
 
-    function displayWeather() {
-
+                today.append(placeName, temp, wind, humidity);
+                console.log(queryURL);
+            });
     };
-    // var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + apiKey;
 
-    // fetch(queryURL)
-    //     .then(function (response) {
-    //         return response.json();
-    //     })
-    //     .then(function (data) {
-    //         console.log(data);
+    $(".search-button").on("click", displayWeather);
 
-    //     });
 
     // function to render buttons from localStorage
     function renderButtons() {
@@ -41,6 +48,7 @@ $(document).ready(function () {
         for (let i = 0; i < historyBtn.length; i++) {
             var newBtn = $("<button>");
             newBtn.addClass("btn btn-secondary w-100 mb-3");
+            newBtn.attr("data-city", historyBtn[i]);
             newBtn.text(historyBtn[i])
             $("#history").append(newBtn);
         }
@@ -56,11 +64,10 @@ $(document).ready(function () {
         localStorage.setItem("city", stringifiedLocations);
 
         renderButtons()
-        console.log('clicked');
     });
 
 
-    $(document).on("click", ".search-button", displayWeather);
+
 
 
     // call function to display initial history buttons
