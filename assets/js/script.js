@@ -9,10 +9,15 @@ $(document).ready(function () {
     var forecast = $("#forecast");
     var locations = [];
     var currentCity = "London"; //current city variable to access data.
+    var date = dayjs().format("DD/MM/YYYY");
+    console.log(date);
 
 
     // function to display weather
     function displayWeather(e) {
+        today.empty();
+        currentCity = $("#search-input").val(); //set current city based on input
+
         console.log(currentCity);
         var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${currentCity}&appid=${apiKey}`;
         fetch(queryURL)
@@ -20,7 +25,13 @@ $(document).ready(function () {
                 return response.json();
             })
             .then(function (data) {
-                var placeName = $("<h2>").text(currentCity);
+
+                var placeName = $("<h2>").text(`${currentCity} (${date})`);
+                var weatherCode = data.weather[0].icon;
+                var weatherIcon = $("<img>").attr("src", `https://openweathermap.org/img/wn/${weatherCode}@2x.png`);
+                weatherIcon.addClass("icon");
+                placeName.append(weatherIcon);
+                console.log(weatherCode);
                 var temp = $("<p>").text(`Temp: ${Math.floor(data.main.temp - 273.15)} ˚C`);
                 var wind = $("<p>").text(`Wind: ${data.wind.speed} KPH`);
                 var humidity = $("<p>").text(`Humidity: ${data.main.humidity}%`);
@@ -29,7 +40,7 @@ $(document).ready(function () {
                 console.log(queryURL);
             });
     };
-
+    //event listener for search button
     $(".search-button").on("click", displayWeather);
 
 
