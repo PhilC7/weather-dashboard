@@ -6,15 +6,14 @@ $(document).ready(function () {
     var apiKey = "7a91cf58326cd6da40050bda09317cd6"
     var history = $("#history");
     var today = $("#today");
-    var locations = [];
+    var locations = []; // set array as variable
     var currentCity = ""; //current city variable to access data.
-    var date = dayjs().format("DD/MM/YYYY");
+    var date = dayjs().format("DD/MM/YYYY"); //get current day and format it
 
 
     // add a delete history button
     var deleteHistory = $("<div>");
     deleteHistory.addClass("deleteHistory mt-3");
-
     var deleteBtn = $("<button>");
     deleteBtn.addClass("btn w-100 mb-3 delete");
     deleteBtn.attr("id", "delete")
@@ -29,7 +28,6 @@ $(document).ready(function () {
         today.empty();
         currentCity = $("#search-input").val() || currentCity; //set current city based on input
 
-        console.log(currentCity);
         // fetch data for today's forecast
         var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${currentCity}&appid=${apiKey}`;
         fetch(queryURL)
@@ -37,43 +35,37 @@ $(document).ready(function () {
                 return response.json();
             })
             .then(function (data) {
-                $("#today").css("background", "linear-gradient(180deg, rgba(196, 152, 106,1) 0%, rgba(102,156,236,1) 100%)") //set css styling for today section
-
+                $("#today").css("background", "linear-gradient(180deg, rgba(196, 152, 106,1) 0%, rgba(102,156,236,1) 100%)")
                 var placeName = $("<h2>").text(`${currentCity} (${date})`);
                 var weatherCode = data.weather[0].icon;
                 var weatherIcon = $("<img>").attr("src", `https://openweathermap.org/img/wn/${weatherCode}@2x.png`);
                 weatherIcon.addClass("icon");
                 placeName.append(weatherIcon);
-                console.log(weatherCode);
-                var temp = $("<p>").text(`Temp: ${Math.floor(data.main.temp - 273.15)} ˚C`);
+                var temp = $("<p>").text(`Temp: ${Math.floor(data.main.temp - 273.15)} ˚C`); //convert to ˚C a round down to the nearest number
                 var wind = $("<p>").text(`Wind: ${data.wind.speed} KPH`);
                 var humidity = $("<p>").text(`Humidity: ${data.main.humidity}%`);
-
                 today.append(placeName, temp, wind, humidity);
-                console.log(queryURL);
             });
 
         // fetch data for 5 day forecast
         var forecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${currentCity}&appid=${apiKey}`;
         $("#forecast").empty();
+        $("#forecast").append($("<h3>5-Day Forecast</h3>"));
         fetch(forecastURL)
             .then(function (response) {
                 return response.json();
             })
             .then(function (forecast) {
                 // get list of forecasts
-
                 var forecasts = forecast.list;
-                console.log(forecasts);
+                //create card for each of the next 5 days
                 for (let i = 7; i < forecasts.length; i += 8) {
-                    var day = new Date(forecast.list[i].dt * 1000)
+                    var day = new Date(forecast.list[i].dt * 1000) //convert unix time stamp into new date (dt * 1000)
                     var formattedDay = dayjs(day).format("DD/MM/YYYY");
                     var day = $("<h3>");
                     day.text(day)
-
                     var weatherCode = forecasts[i].weather[0].icon;
                     var weatherURL = `https://openweathermap.org/img/wn/${weatherCode}@2x.png`;
-
                     $("#forecast").append(`
                     <div class="card col mx-3 rounded forecast" >
                     <div class="card-body">
@@ -86,7 +78,6 @@ $(document).ready(function () {
                   </div>`)
                     $(".card").css("color", "white");
                     $(".card").css("background", "linear-gradient(0deg, rgba(236,102,201,1) 0%, rgba(102,156,236,1) 100%)");
-
                 }
             });
     };
@@ -124,23 +115,22 @@ $(document).ready(function () {
         var stringifiedLocations = JSON.stringify(locations);
         $("#search-input").val("");
         localStorage.setItem("city", stringifiedLocations);
-
         renderButtons()
     });
 
 
-    //click event to display any city data in history
+    //click event to display any city data from history
     history.on("click", ".history-btn", function (e) {
         currentCity = e.target.firstChild.data;
         displayWeather()
     })
 
-    // call function to display initial history buttons
-    renderButtons()
-
     //event listener to delete history
     $(".delete").on("click", function (e) {
         localStorage.clear();
     });
+
+    // call function to display initial history buttons
+    renderButtons()
 
 });
