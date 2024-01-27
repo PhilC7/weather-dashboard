@@ -6,9 +6,22 @@ $(document).ready(function () {
     var apiKey = "7a91cf58326cd6da40050bda09317cd6"
     var history = $("#history");
     var today = $("#today");
-    var locations = ["London"];
+    var locations = [];
     var currentCity = ""; //current city variable to access data.
     var date = dayjs().format("DD/MM/YYYY");
+
+
+    // add a delete history button
+    var deleteHistory = $("<div>");
+    deleteHistory.addClass("deleteHistory mt-3");
+
+    var deleteBtn = $("<button>");
+    deleteBtn.addClass("btn btn-danger w-100 mb-3 delete");
+    deleteBtn.text("Delete History");
+    deleteHistory.append(deleteBtn);
+    deleteHistory.insertBefore(".hr");
+
+
 
     // function to display weather
     function displayWeather(e) {
@@ -23,6 +36,7 @@ $(document).ready(function () {
                 return response.json();
             })
             .then(function (data) {
+                $("#today").css("background-color", "rgb(119, 176, 199)") //set css styling for today section
 
                 var placeName = $("<h2>").text(`${currentCity} (${date})`);
                 var weatherCode = data.weather[0].icon;
@@ -100,7 +114,7 @@ $(document).ready(function () {
     }
 
     // click event to handle information entered in the search input field.
-    $(".btn").on("click", function (event) {
+    $(".search-button").on("click", function (event) {
         event.preventDefault();
         var cityName = $("#search-input").val().trim();
         locations.push(cityName)
@@ -120,5 +134,10 @@ $(document).ready(function () {
 
     // call function to display initial history buttons
     renderButtons()
+
+    //event listener to delete history
+    $(".delete").on("click", function (e) {
+        localStorage.clear();
+    });
 
 });

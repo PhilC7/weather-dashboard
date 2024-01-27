@@ -1,7 +1,7 @@
 /* Styling to show placement - TO BE REVISED */
 #today {
-  height: 300px;
-  background-color: rgb(119, 176, 199);
+  height: 250px;
+  /* background-color: rgb(119, 176, 199); */
 }
 .card.forecast {
   background-color: rgb(43, 114, 149);
