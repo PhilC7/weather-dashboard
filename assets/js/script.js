@@ -6,11 +6,9 @@ $(document).ready(function () {
     var apiKey = "7a91cf58326cd6da40050bda09317cd6"
     var history = $("#history");
     var today = $("#today");
-    var forecast = $("#forecast");
     var locations = [];
     var currentCity = "London"; //current city variable to access data.
     var date = dayjs().format("DD/MM/YYYY");
-    console.log(date);
 
 
     // function to display weather
@@ -41,21 +39,37 @@ $(document).ready(function () {
             });
 
         var forecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${currentCity}&appid=${apiKey}`;
+        $("#forecast").empty();
         fetch(forecastURL)
             .then(function (response) {
                 return response.json();
             })
             .then(function (forecast) {
                 // get list of forecasts
+
                 var forecasts = forecast.list;
+                console.log(forecasts);
+                for (let i = 7; i < forecasts.length; i += 8) {
+                    var day = new Date(forecast.list[i].dt * 1000)
+                    var formattedDay = dayjs(day).format("DD/MM/YYYY");
+                    var day = $("<h3>");
+                    day.text(day)
 
-                for (let i = 7; i < forecasts.length; i + 8) {
-                    console.log("loop");
+                    var weatherCode = forecasts[i].weather[0].icon;
+                    var weatherURL = `https://openweathermap.org/img/wn/${weatherCode}@2x.png`;
 
+
+                    $("#forecast").append(`
+                    <div class="card col mx-2 forecast" >
+                    <div class="card-body">
+                      <h5 class="card-title">${formattedDay}</h5>
+                      <img src="${weatherURL}" alt="${forecasts[i].weather[0].description}" />
+                      <p class="card-text temp">Temp: ${Math.floor(forecasts[i].main.temp - 273.15)} ˚C</p>
+                      <p class="card-text wind">Wind: ${forecasts[i].wind.speed} KPH</p>
+                      <p class="card-text humidity">Humidity: ${forecasts[i].main.humidity}%</p>
+                    </div>
+                  </div>`)
                 }
-                var day = new Date(forecast.list[15].dt * 1000)
-                var formattedDay = dayjs(day).format("DD/MM/YYYY");
-                console.log(formattedDay);
             });
     };
 
