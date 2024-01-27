@@ -6,17 +6,17 @@ $(document).ready(function () {
     var apiKey = "7a91cf58326cd6da40050bda09317cd6"
     var history = $("#history");
     var today = $("#today");
-    var locations = [];
-    var currentCity = "London"; //current city variable to access data.
+    var locations = ["London"];
+    var currentCity = ""; //current city variable to access data.
     var date = dayjs().format("DD/MM/YYYY");
-
 
     // function to display weather
     function displayWeather(e) {
         today.empty();
-        currentCity = $("#search-input").val(); //set current city based on input
+        currentCity = $("#search-input").val() || currentCity; //set current city based on input
 
         console.log(currentCity);
+        // fetch data for today's forecast
         var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${currentCity}&appid=${apiKey}`;
         fetch(queryURL)
             .then(function (response) {
@@ -38,6 +38,7 @@ $(document).ready(function () {
                 console.log(queryURL);
             });
 
+        // fetch data for 5 day forecast
         var forecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${currentCity}&appid=${apiKey}`;
         $("#forecast").empty();
         fetch(forecastURL)
@@ -80,7 +81,7 @@ $(document).ready(function () {
     // function to render buttons from localStorage
     function renderButtons() {
         //clear history to prevent duplicate buttons
-        $("#history").empty();
+        history.empty();
 
         var loadCity = localStorage.getItem("city");
         if (loadCity == null || loadCity == "") {
@@ -91,7 +92,7 @@ $(document).ready(function () {
         // create history button for each item of the array
         for (let i = 0; i < historyBtn.length; i++) {
             var newBtn = $("<button>");
-            newBtn.addClass("btn btn-secondary w-100 mb-3");
+            newBtn.addClass("btn btn-secondary w-100 mb-3 history-btn");
             newBtn.attr("data-city", historyBtn[i]);
             newBtn.text(historyBtn[i])
             $("#history").append(newBtn);
@@ -99,7 +100,7 @@ $(document).ready(function () {
     }
 
     // click event to handle information entered in the search input field.
-    $("#search-button").on("click", function (event) {
+    $(".btn").on("click", function (event) {
         event.preventDefault();
         var cityName = $("#search-input").val().trim();
         locations.push(cityName)
@@ -111,17 +112,13 @@ $(document).ready(function () {
     });
 
 
+    //click event to display any city data in history
+    history.on("click", ".history-btn", function (e) {
+        currentCity = e.target.firstChild.data;
+        displayWeather()
+    })
+
     // call function to display initial history buttons
     renderButtons()
 
-
-
-
 });
-
-
-// HOW TO ACCESS REQUIRED INFO
-// console.log(data.name);
-// console.log(Math.floor(data.main.temp - 273.15) + "˚C");
-// console.log(data.wind.speed);
-// console.log(data.weather[0].icon);
