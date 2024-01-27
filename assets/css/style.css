@@ -3,3 +3,8 @@
   height: 300px;
   border: black solid 1px;
 }
+.card.forecast {
+  background-color: rgb(43, 114, 149);
+  border: none;
+  border-radius: 0;
+}
