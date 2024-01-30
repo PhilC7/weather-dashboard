@@ -59,7 +59,7 @@ $(document).ready(function () {
                 // get list of forecasts
                 var forecasts = forecast.list;
                 //create card for each of the next 5 days
-                for (let i = 7; i < forecasts.length; i += 8) {
+                for (let i = 7; i < forecasts.length; i += 8) { // +8 as data is every 3 hours (8 readings every 24 hours). Start at 7 as index starts at 0.
                     var day = new Date(forecast.list[i].dt * 1000) //convert unix time stamp into new date (dt * 1000)
                     var formattedDay = dayjs(day).format("DD/MM/YYYY");
                     var day = $("<h3>");
